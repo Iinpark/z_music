@@ -1,28 +1,27 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <MainPage />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+const {Telegraf} = require('telegraf');
+const BOT_TOKEN = '1760661141:AAE8nCW0gYYBZvqwS-rgiltBu4T1AppF8HE'
 
+import MainPage from './pages/MainPage.vue';
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    MainPage
+  },
+  mounted() {
+    const bot = new Telegraf(BOT_TOKEN)
+    bot.launch()
+    bot.command('play', console.log)
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>

@@ -19,14 +19,17 @@ export default {
 			this.bot.on('text', this.commandHandler)
 		},
 		commandHandler (context) {
-			const { command, payload} = commandParser(context.update.message.text);
-			switch (command) {
+			try {
+				const { command, payload} = commandParser(context.update.message.text);
+				switch (command) {
 				case 'play':
 					this.addToPlaylist(payload)
 					break;
-			
 				default:
 					break;
+			}
+			} catch (error) {
+				console.log(error);
 			}
 		},
 		addToPlaylist (link) {

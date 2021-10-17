@@ -10,6 +10,7 @@
 <script>
 import videojs from "video.js";
 import "videojs-youtube";
+import "videojs-playlist";
 import "video.js/dist/video-js.css";
 
 export default {
@@ -22,9 +23,11 @@ export default {
       },
     },
   },
+
   data() {
     return {
       player: null,
+      playlist: [],
     };
   },
   mounted() {

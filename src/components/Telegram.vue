@@ -4,6 +4,7 @@
 
 <script>
 import {Telegraf} from 'telegraf'
+import {commandParser} from '@/utils'
 
 export default {
 	data() {
@@ -15,7 +16,18 @@ export default {
 		init () {
 			this.bot = new Telegraf(process.env.VUE_APP_BOT_TOKEN);
 			this.bot.launch();
-			this.bot.on('text', (...args) => {console.log('text', args);})
+			this.bot.on('text', this.commandHandler)
+		},
+		commandHandler (context) {
+			const { command, payload} = commandParser(context.update.message.text);
+			switch (command) {
+				case 'play':
+					this.addToPlaylist(payload)
+					break;
+			
+				default:
+					break;
+			}
 		},
 		addToPlaylist (link) {
 			console.log('addToPlaylist', link);

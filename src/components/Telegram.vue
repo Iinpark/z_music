@@ -1,9 +1,9 @@
 <template>
-	<div></div>
+	<div style="display:none;"></div>
 </template>
 
 <script>
-import Telegraf from 'telegraf'
+import {Telegraf} from 'telegraf'
 
 export default {
 	data() {
@@ -13,9 +13,25 @@ export default {
 	},
 	methods: {
 		init () {
-			const bot = new Telegraf(process.env.BOT_TOKEN);
-			bot.connect();
+			this.bot = new Telegraf(process.env.VUE_APP_BOT_TOKEN);
+			this.bot.launch();
+			this.bot.on('text', (...args) => {console.log('text', args);})
+		},
+		addToPlaylist (link) {
+			console.log('addToPlaylist', link);
+			this.$emit('playlist:add', link)
+		},
+		resume (...args) {
+			console.log('resume', args);
+			this.$emit('player:play')
+		},
+		pause (...args) {
+			console.log('pause',args);
+			this.$emit('player:pause')
 		}
+	},
+	mounted () {
+		this.init()
 	}
 }
 </script>

@@ -2,11 +2,13 @@
   <div>
     <h1>Плеер</h1>
     <Player :options="options" />
+    <Telegram />
   </div>
 </template>
 
 <script>
 import Player from '@/components/Player.vue'
+import Telegram from '../components/Telegram.vue'
 export default {
   data () {
     return {
@@ -19,7 +21,8 @@ export default {
     }
   },
   components: {
-    Player
+    Player,
+    Telegram
   }
 }
 </script>

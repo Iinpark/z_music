@@ -14,8 +14,10 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.5",
+    "dotenv": "^10.0.0",
     "telegraf": "^4.0.0",
     "video.js": "^7.15.4",
+    "videojs-playlist": "^4.3.1",
     "videojs-youtube": "^2.6.1",
     "vue": "^2.6.11"
   },

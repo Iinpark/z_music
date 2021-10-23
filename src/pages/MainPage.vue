@@ -2,7 +2,7 @@
   <div>
     <h1>Плеер</h1>
     <Player :options="options" />
-    <Telegram />
+    <Telegram @play:add="addToPlaylist" />
   </div>
 </template>
 
@@ -10,6 +10,11 @@
 import Player from '@/components/Player.vue'
 import Telegram from '../components/Telegram.vue'
 export default {
+  methods: {
+    addToPlaylist(val){
+      console.log(val);
+    }
+  },
   data () {
     return {
       options: {

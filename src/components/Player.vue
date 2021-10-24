@@ -31,14 +31,12 @@ export default {
   watch: {
     getPlaylist (newVal)  {
       if (this.firstSong) {
-        this.player.src(newVal[0]);
-        this.player.play();
+        this.switchSongs()
         this.player.muted(false);
-        this.POP_SONG();
         this.firstSong = false;
         return;
       }
-      if(newVal.length === 1) {
+      if(newVal.length === 1 && !this.firstSong) {
         this.switchSongs()
       }
     }
@@ -55,6 +53,7 @@ export default {
       this.player.src(this.getPlaylist[0]);
       this.POP_SONG();
       this.player.play();
+      this.$emit('song-switched', this.player.duration())
     }
   },
   mounted() {
@@ -68,14 +67,14 @@ export default {
         console.log("onPlayerReady", this);
       }
     );
-	window.player = this.player;
+  window.player = this.player;
   this.player.on('ended', this.switchSongs);
   this.player.on('loadeddata', () => {
     console.log('loadeddata');
     window.player.play()
   });
   this.player.on('timeupdate', () => {
-    console.log(this.player.currentTime());
+    this.$emit('timeupdate', this.player.currentTime())
 });
 
   },

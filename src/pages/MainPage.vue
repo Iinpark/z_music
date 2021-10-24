@@ -1,18 +1,29 @@
 <template>
   <div>
     <h1>Плеер</h1>
-    <Player :options="options" />
+    <Player
+      :options="options"
+      @timeupdate="timeupdate"
+      @song-switched="(t) => time.total = formatTime(t)"
+    />
     <Telegram @play:add="addToPlaylist" />
+    <span>{{time.current}} / {{time.total}}</span>
   </div>
 </template>
 
 <script>
 import Player from '@/components/Player.vue'
 import Telegram from '../components/Telegram.vue'
+import { formatTime } from '@/utils'
+
 export default {
   methods: {
+    formatTime,
     addToPlaylist(val){
       console.log(val);
+    },
+    timeupdate (seconds) {
+      this.time.current = formatTime(seconds)
     }
   },
   data () {
@@ -22,6 +33,10 @@ export default {
           type:'video/youtube',
           src: 'https://www.youtube.com/watch?v=WYAicbst-G0'
         }]
+      },
+      time: {
+        current: 0,
+        total: 0
       }
     }
   },

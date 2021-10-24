@@ -1,6 +1,8 @@
 <template>
   <div class="player__wrapper">
     <video
+      autoplay
+      muted
       ref="videoPlayer"
       class="video-js"
     ></video>
@@ -10,8 +12,8 @@
 <script>
 import videojs from "video.js";
 import "videojs-youtube";
-import "videojs-playlist";
 import "video.js/dist/video-js.css";
+import {mapMutations, mapGetters} from 'vuex';
 
 export default {
   name: "VideoPlayer",
@@ -23,12 +25,37 @@ export default {
       },
     },
   },
-
+  computed: {
+    ...mapGetters(['getPlaylist'])
+  },
+  watch: {
+    getPlaylist (newVal)  {
+      if (this.firstSong) {
+        this.player.src(newVal[0]);
+        this.player.play();
+        this.player.muted(false);
+        this.POP_SONG();
+        this.firstSong = false;
+        return;
+      }
+      if(newVal.length === 1) {
+        this.switchSongs()
+      }
+    }
+  },
   data() {
     return {
       player: null,
-      playlist: [],
+      firstSong: true
     };
+  },
+  methods: {
+    ...mapMutations(['RESET_SONGS', 'POP_SONG']),
+    switchSongs () {
+      this.player.src(this.getPlaylist[0]);
+      this.POP_SONG();
+      this.player.play();
+    }
   },
   mounted() {
     this.player = videojs(
@@ -42,6 +69,15 @@ export default {
       }
     );
 	window.player = this.player;
+  this.player.on('ended', this.switchSongs);
+  this.player.on('loadeddata', () => {
+    console.log('loadeddata');
+    window.player.play()
+  });
+  this.player.on('timeupdate', () => {
+    console.log(this.player.currentTime());
+});
+
   },
   beforeDestroy() {
     if (this.player) {

@@ -10,9 +10,7 @@
 </template>
 
 <script>
-import videojs from "video.js";
-import "videojs-youtube";
-import "video.js/dist/video-js.css";
+
 import {mapMutations, mapGetters} from 'vuex';
 
 export default {
@@ -26,7 +24,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getPlaylist'])
+    ...mapGetters(['getPlaylist','player'])
   },
   watch: {
     getPlaylist (newVal)  {
@@ -43,12 +41,11 @@ export default {
   },
   data() {
     return {
-      player: null,
       firstSong: true
     };
   },
   methods: {
-    ...mapMutations(['RESET_SONGS', 'POP_SONG']),
+    ...mapMutations(['RESET_SONGS', 'POP_SONG', 'INIT_PLAYER']),
     switchSongs () {
       this.player.src(this.getPlaylist[0]);
       this.POP_SONG();
@@ -57,7 +54,7 @@ export default {
     }
   },
   mounted() {
-    this.player = videojs(
+    this.INIT_PLAYER(
       this.$refs.videoPlayer,
       {
         techOrder: ["youtube"],
@@ -67,7 +64,7 @@ export default {
         console.log("onPlayerReady", this);
       }
     );
-  window.player = this.player;
+  
   this.player.on('ended', this.switchSongs);
   this.player.on('loadeddata', () => {
     console.log('loadeddata');
@@ -75,8 +72,7 @@ export default {
   });
   this.player.on('timeupdate', () => {
     this.$emit('timeupdate', this.player.currentTime())
-});
-
+    });
   },
   beforeDestroy() {
     if (this.player) {

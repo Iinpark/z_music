@@ -5,6 +5,7 @@
 <script>
 import { Telegraf } from "telegraf";
 import { commandParser } from "@/utils";
+import { mapActions } from "vuex";
 
 export default {
   data() {
@@ -13,10 +14,23 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["ADD_SONG"]),
     init() {
       this.bot = new Telegraf(process.env.VUE_APP_BOT_TOKEN);
       this.bot.launch();
       this.bot.on("text", this.commandHandler);
+    },
+    addToPlaylist(link) {
+      console.log("addToPlaylist", link);
+      this.ADD_SONG(link);
+    },
+    resume(...args) {
+      console.log("resume", args);
+      this.$emit("player:resume");
+    },
+    pause(...args) {
+      console.log("pause", args);
+      this.$emit("player:pause");
     },
     commandHandler(context) {
       try {
@@ -35,21 +49,9 @@ export default {
             break;
         }
       } catch (error) {
-      //TODO: ВЫКИДЫВАТЬ ОШИБКУ В ЧАТ В ТЕЛЕГРАМЕ
+        //TODO: ВЫКИДЫВАТЬ ОШИБКУ В ЧАТ В ТЕЛЕГРАМЕ
         console.log(error);
       }
-    },
-    addToPlaylist(link) {
-      console.log("addToPlaylist", link);
-      this.$emit("playlist:add", link);
-    },
-    resume(...args) {
-      console.log("resume", args);
-      this.$emit("player:resume");
-    },
-    pause(...args) {
-      console.log("pause", args);
-      this.$emit("player:pause");
     },
   },
   mounted() {

@@ -20,7 +20,7 @@ export default {
       options: {
         sources:[{
           type:'video/youtube',
-          src: 'https://www.youtube.com/watch?v=Tf1DEI2lEe0&t=2376s'
+          src: 'https://www.youtube.com/watch?v=WYAicbst-G0'
         }]
       }
     }

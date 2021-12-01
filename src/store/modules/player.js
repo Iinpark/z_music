@@ -12,10 +12,22 @@ const playerModule = {
 		window.player = state.player;
 	},
   },
-  actions: {},
+  actions: {
+    PLAY: ({ state }) => {
+      state.player.play()
+    },
+    PAUSE: ({ state }) => {
+      state.player.pause()
+    },
+    NEXT_SONG: ({ state, dispatch, getters }) => {
+      state.player.src(getters.getPlaylist[0]);
+      dispatch('POP_SONG');
+      state.player.play();
+    }
+  },
   getters: {
     player: (state) => state.player,
-  },
+  },  
 };
 
 export default playerModule;

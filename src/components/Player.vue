@@ -11,7 +11,7 @@
 
 <script>
 
-import {mapMutations, mapGetters} from 'vuex';
+import {mapMutations, mapGetters, mapActions} from 'vuex';
 
 export default {
   name: "VideoPlayer",
@@ -45,11 +45,10 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['RESET_SONGS', 'POP_SONG', 'INIT_PLAYER']),
+    ...mapMutations(['RESET_SONGS', 'POP_SONG', 'INIT_PLAYER',]),
+    ...mapActions(['NEXT_SONG']),
     switchSongs () {
-      this.player.src(this.getPlaylist[0]);
-      this.POP_SONG();
-      this.player.play();
+      this.NEXT_SONG()
       this.$emit('song-switched', this.player.duration())
     }
   },

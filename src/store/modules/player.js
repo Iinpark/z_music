@@ -19,9 +19,9 @@ const playerModule = {
     PAUSE: ({ state }) => {
       state.player.pause()
     },
-    NEXT_SONG: ({ state, dispatch, getters }) => {
+    NEXT_SONG: ({ state, commit, getters }) => {
       state.player.src(getters.getPlaylist[0]);
-      dispatch('POP_SONG');
+      commit('POP_SONG');
       state.player.play();
     }
   },

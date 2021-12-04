@@ -14,7 +14,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["ADD_SONG"]),
+    ...mapActions(["ADD_SONG", 'NEXT_SONG']),
     init() {
       this.bot = new Telegraf(process.env.VUE_APP_BOT_TOKEN);
       this.bot.launch();
@@ -32,6 +32,9 @@ export default {
       console.log("pause", args);
       this.$emit("player:pause");
     },
+   skip() {
+      this.NEXT_SONG()
+    },
     commandHandler(context) {
       try {
         const { command, payload } = commandParser(context.update.message.text);
@@ -44,6 +47,9 @@ export default {
             break;
           case "resume":
             this.resume();
+            break;
+          case 'skip':
+            this.skip()
             break;
           default:
             break;

@@ -20,9 +20,16 @@ const playerModule = {
       state.player.pause()
     },
     NEXT_SONG: ({ state, commit, getters }) => {
-      state.player.src(getters.getPlaylist[0]);
-      commit('POP_SONG');
-      state.player.play();
+      const nextSong = getters.getPlaylist[0]
+      if (nextSong) {
+        state.player.src(nextSong);
+        commit('POP_SONG');
+        state.player.play();
+      } else if (!nextSong) {
+        state.player.pause()
+        state.player.currentTime(99999999)
+      }
+     
     }
   },
   getters: {

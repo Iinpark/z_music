@@ -27,15 +27,12 @@ export default {
     ...mapGetters(['getPlaylist','player'])
   },
   watch: {
-    getPlaylist (newVal)  {
+    getPlaylist ()  {
       if (this.firstSong) {
         this.switchSongs()
         this.player.muted(false);
         this.firstSong = false;
         return;
-      }
-      if(newVal.length === 1 && !this.firstSong) {
-        this.switchSongs()
       }
     }
   },

@@ -6,7 +6,7 @@
       @timeupdate="timeupdate"
       @song-switched="(t) => time.total = formatTime(t)"
     />
-    <Telegram @play:add="addToPlaylist" />
+    <Telegram/>
     <span>{{time.current}} / {{time.total}}</span>
   </div>
 </template>

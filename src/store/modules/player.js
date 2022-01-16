@@ -20,7 +20,7 @@ const playerModule = {
       state.player.pause()
     },
     NEXT_SONG: ({ state, commit, getters }) => {
-      const nextSong = getters.getPlaylist[0]
+      const nextSong = getters.getPlaylist[0].src
       if (nextSong) {
         state.player.src(nextSong);
         commit('POP_SONG');
@@ -34,7 +34,7 @@ const playerModule = {
   },
   getters: {
     player: (state) => state.player,
-  },  
+  },
 };
 
 export default playerModule;

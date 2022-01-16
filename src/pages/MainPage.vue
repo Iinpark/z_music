@@ -1,5 +1,6 @@
 <template>
   <div>
+    <track-information />
     <h1>Плеер</h1>
     <Player
       :options="options"
@@ -14,6 +15,7 @@
 <script>
 import Player from '@/components/Player.vue'
 import Telegram from '../components/Telegram.vue'
+import TrackInformation from '../components/TrackInformation.vue'
 import { formatTime } from '@/utils'
 
 export default {
@@ -42,7 +44,8 @@ export default {
   },
   components: {
     Player,
-    Telegram
+    Telegram,
+    TrackInformation
   }
 }
 </script>

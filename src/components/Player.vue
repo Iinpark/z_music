@@ -82,5 +82,6 @@ export default {
 	.player__wrapper {
 		max-height: 200px;
 		height: 200px;
+    /* opacity: 0; */
 	}
 </style>

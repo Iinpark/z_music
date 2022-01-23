@@ -15,7 +15,8 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.5",
-    "telegraf": "^4.0.0",
+    "node-sass": "^6.0.1",
+    "telegraf": "4.0.0",
     "video.js": "^7.15.4",
     "videojs-youtube": "^2.6.1",
     "vue": "^2.6.11",
@@ -33,6 +34,7 @@
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "sass-loader": "^10.2.1",
     "vue-cli-plugin-electron-builder": "~2.1.1",
     "vue-jest": "^3.0.7",
     "vue-template-compiler": "^2.6.11"

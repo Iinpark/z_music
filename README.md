@@ -1,24 +1,11 @@
-# z_music
+## Features 
+### Player
+- [ ] Add track
+- [ ] Skip track
+- [ ] Pause player
 
-## Project setup
-```
-yarn install
-```
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### UI
+- [ ] displaying current track
+- [ ] displaying next track
+- [ ] displaying time to finish current track

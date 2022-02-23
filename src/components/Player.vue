@@ -1,17 +1,12 @@
 <template>
-  <div class="player__wrapper">
-    <video
-      autoplay
-      muted
-      ref="videoPlayer"
-      class="video-js"
-    ></video>
+  <div>
+    <div id="yt-player"></div>
   </div>
 </template>
 
 <script>
 
-import {mapMutations, mapGetters, mapActions} from 'vuex';
+import { mapGetters, mapActions} from 'vuex';
 
 export default {
   name: "VideoPlayer",
@@ -42,30 +37,16 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['RESET_SONGS', 'POP_SONG', 'INIT_PLAYER',]),
-    ...mapActions(['NEXT_SONG']),
+    ...mapActions(['NEXT_SONG', 'INIT_PLAYER']),
     switchSongs () {
       this.NEXT_SONG()
       this.$emit('song-switched', this.player.duration())
     }
   },
   mounted() {
-    this.INIT_PLAYER(
-      this.$refs.videoPlayer,
-      {
-        techOrder: ["youtube"],
-        ...this.options,
-      },
-      function onPlayerReady() {
-        console.log("onPlayerReady", this);
-      }
-    );
+    this.INIT_PLAYER('yt-player');
   
   this.player.on('ended', this.switchSongs);
-  this.player.on('loadeddata', () => {
-    console.log('loadeddata');
-    window.player.play()
-  });
   this.player.on('timeupdate', () => {
     this.$emit('timeupdate', this.player.currentTime())
     });
@@ -77,11 +58,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-	.player__wrapper {
-		max-height: 200px;
-		height: 200px;
-    /* opacity: 0; */
-	}
-</style>

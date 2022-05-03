@@ -17,9 +17,9 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    INIT_PLAYER: ({ commit }, elementId) => {
+    INIT_PLAYER: ({ commit }, {elementId, onload}) => {
       IframeLoader.load(() => {
-        commit('INIT_PLAYER', new window.YT.Player(elementId));
+        commit('INIT_PLAYER', new window.YT.Player(elementId, onload));
       });
     },
     PLAY: ({ state }) => {
@@ -37,7 +37,7 @@ export default new Vuex.Store({
       if (updatedPlaylist) {
         updatedPlaylist.shift();
       }
-  
+
       updatedPlaylist.push(videoIdExtractor(link));
       getters.player.cuePlaylist(updatedPlaylist);
     },

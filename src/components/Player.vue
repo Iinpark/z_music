@@ -7,6 +7,7 @@
 <script>
 
 import { mapGetters, mapActions} from 'vuex';
+import STATES from '@/constants/playerStates.js';
 
 export default {
   name: "VideoPlayer",
@@ -44,17 +45,10 @@ export default {
     }
   },
   mounted() {
-    this.INIT_PLAYER('yt-player');
-  
-  this.player.on('ended', this.switchSongs);
-  this.player.on('timeupdate', () => {
-    this.$emit('timeupdate', this.player.currentTime())
+    this.INIT_PLAYER({
+      elementId: 'yt-player',
+      callback: () => this.player.addEventListener(STATES.ENDED, this.switchSongs)
     });
-  },
-  beforeDestroy() {
-    if (this.player) {
-      this.player.dispose();
-    }
   },
 };
 </script>

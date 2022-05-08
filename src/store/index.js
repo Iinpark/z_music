@@ -15,11 +15,17 @@ export default new Vuex.Store({
       state.player = player;
       window.player = state.player;
     },
+    ADD_SONG: (state, link) => {
+      let playlist = state.playlist;
+      playlist.push(link);
+    },
+    POP_SONG: (state)=> state.playlist.pop()
   },
+
   actions: {
-    INIT_PLAYER: ({ commit }, {elementId, onload}) => {
+    INIT_PLAYER: ({ commit }, {elementId, options}) => {
       IframeLoader.load(() => {
-        commit('INIT_PLAYER', new window.YT.Player(elementId, onload));
+        commit('INIT_PLAYER', new window.YT.Player(elementId, options));
       });
     },
     PLAY: ({ state }) => {
@@ -28,20 +34,14 @@ export default new Vuex.Store({
     PAUSE: ({ state }) => {
       state.player.pause();
     },
-    NEXT_SONG: ({ state }) => {
-      state.player.nextVideo();
-    },
-    ADD_SONG: ({ getters }, link) => {
-      let updatedPlaylist = getters.player.getPlaylist();
-
-      if (updatedPlaylist) {
-        updatedPlaylist.shift();
-      }
-
-      updatedPlaylist.push(videoIdExtractor(link));
-      getters.player.cuePlaylist(updatedPlaylist);
+    NEXT_SONG: ({ state, commit }) => {
+      const firstLink = state.playlist[0];
+      const videoId = videoIdExtractor(firstLink)
+      state.player.loadVideoById(videoId);
+      commit ('POP_SONG');
     },
   },
+
   getters: {
     getPlaylist: (state) => state.playlist,
     player: (state) => state.player,

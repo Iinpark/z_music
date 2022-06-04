@@ -3,9 +3,7 @@
     <track-information />
     <h1>Плеер</h1>
     <Player
-      :options="options"
       @timeupdate="timeupdate"
-      @song-switched="(t) => time.total = formatTime(t)"
     />
     <Telegram/>
     <span>{{time.current}} / {{time.total}}</span>
@@ -16,7 +14,7 @@
 import Player from '@/components/Player.vue'
 import Telegram from '../components/Telegram.vue'
 import TrackInformation from '../components/TrackInformation.vue'
-import { formatTime } from '@/utils'
+import { formatTime, makeTimer } from '@/utils'
 
 export default {
   methods: {
@@ -25,17 +23,13 @@ export default {
       console.log(val);
     },
     timeupdate (seconds) {
-      this.time.current = formatTime(seconds)
+      this.time.total = formatTime(seconds);
+      makeTimer(seconds, (secsLeft) => this.time.current = formatTime(secsLeft))
     }
   },
+
   data () {
     return {
-      options: {
-        sources:[{
-          type:'video/youtube',
-          src: 'https://www.youtube.com/watch?v=WYAicbst-G0'
-        }]
-      },
       time: {
         current: 0,
         total: 0

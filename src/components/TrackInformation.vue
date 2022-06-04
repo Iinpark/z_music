@@ -1,5 +1,5 @@
 <template>
-	<main class="track-information">
+	<main class="track-information" v-if="false">
 		<div class="information">
 		
 			<div class="current-track current-track_left">

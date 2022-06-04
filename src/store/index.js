@@ -35,6 +35,11 @@ export default new Vuex.Store({
       state.player.pause();
     },
     NEXT_SONG: ({ state, commit }) => {
+      if (state.playlist.length === 0) {
+        state.player.seekTo(state.player.getDuration())
+        return;
+      }
+
       const firstLink = state.playlist[0];
       const videoId = videoIdExtractor(firstLink)
       state.player.loadVideoById(videoId);

@@ -5,7 +5,7 @@
 <script>
 import { Telegraf } from "telegraf";
 import { commandParser } from "@/utils";
-import { mapActions } from "vuex";
+import { mapActions, mapMutations, mapGetters } from "vuex";
 
 export default {
   data() {
@@ -14,7 +14,10 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["ADD_SONG", 'NEXT_SONG']),
+    ...mapActions(["ADD_SONG", 'NEXT_SONG', 'PLAY']),
+    ...mapMutations(["ADD_SONG"]),
+    ...mapGetters(['getPlaylist']),
+
     init() {
       this.bot = new Telegraf(process.env.VUE_APP_BOT_TOKEN);
       this.bot.launch();
@@ -23,6 +26,9 @@ export default {
     addToPlaylist(link) {
       console.log("addToPlaylist", link);
       this.ADD_SONG(link);
+      if (this.getPlaylist.length === 1) {
+        this.PLAY()
+      }
     },
     resume(...args) {
       console.log("resume", args);

@@ -1,28 +1,17 @@
 <template>
-  <div class="player__wrapper">
-    <video
-      autoplay
-      muted
-      ref="videoPlayer"
-      class="video-js"
-    ></video>
+  <div>
+    <div id="yt-player"></div>
   </div>
 </template>
 
 <script>
 
-import {mapMutations, mapGetters, mapActions} from 'vuex';
+import { mapGetters, mapActions} from 'vuex';
+import STATES from '@/constants/playerStates.js';
 
 export default {
   name: "VideoPlayer",
-  props: {
-    options: {
-      type: Object,
-      default() {
-        return {};
-      },
-    },
-  },
+
   computed: {
     ...mapGetters(['getPlaylist','player'])
   },
@@ -30,7 +19,7 @@ export default {
     getPlaylist ()  {
       if (this.firstSong) {
         this.switchSongs()
-        this.player.muted(false);
+        this.player.unMute();
         this.firstSong = false;
         return;
       }
@@ -42,46 +31,29 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['RESET_SONGS', 'POP_SONG', 'INIT_PLAYER',]),
-    ...mapActions(['NEXT_SONG']),
+    ...mapActions(['NEXT_SONG', 'INIT_PLAYER']),
     switchSongs () {
       this.NEXT_SONG()
-      this.$emit('song-switched', this.player.duration())
+    },
+    timeUpdate (...data) {
+      this.$emit('timeupdate', this.player.duration())
+      console.log(...data);
     }
   },
   mounted() {
-    this.INIT_PLAYER(
-      this.$refs.videoPlayer,
-      {
-        techOrder: ["youtube"],
-        ...this.options,
-      },
-      function onPlayerReady() {
-        console.log("onPlayerReady", this);
+    this.INIT_PLAYER({
+      elementId: 'yt-player',
+      options: {
+        events: {
+          'onStateChange':({data}) =>  {
+
+            if (data === STATES.PLAYING) {
+              this.$emit('timeupdate', this.player.getDuration())
+            }
+          }
+        }
       }
-    );
-  
-  this.player.on('ended', this.switchSongs);
-  this.player.on('loadeddata', () => {
-    console.log('loadeddata');
-    window.player.play()
-  });
-  this.player.on('timeupdate', () => {
-    this.$emit('timeupdate', this.player.currentTime())
     });
-  },
-  beforeDestroy() {
-    if (this.player) {
-      this.player.dispose();
-    }
   },
 };
 </script>
-
-<style scoped>
-	.player__wrapper {
-		max-height: 200px;
-		height: 200px;
-    /* opacity: 0; */
-	}
-</style>

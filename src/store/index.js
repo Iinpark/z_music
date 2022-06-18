@@ -1,35 +1,54 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import playerModule from './modules/player';
+import Vue from 'vue';
+import Vuex from 'vuex';
+import IframeLoader from 'youtube-iframe';
+import videoIdExtractor from '../utils/youtubeVideoIdExtractor.js';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    playlist: []
+    playlist: [],
+    player: {}
   },
   mutations: {
-    ADD_SONG: (state, source) => {
-      state.playlist.push(source)
+    INIT_PLAYER: (state, player) => {
+      state.player = player;
+      window.player = state.player;
     },
-    RESET_SONGS: (state) => {
-      state.playlist = [];
+    ADD_SONG: (state, link) => {
+      let playlist = state.playlist;
+      playlist.push(link);
     },
-    POP_SONG: (state) => {
-      state.playlist.pop()
-    }
+    POP_SONG: (state)=> state.playlist.pop()
   },
+
   actions: {
-    ADD_SONG: ({commit}, link) => {
-      const payload = {
-          src: link,
-          type: 'video/youtube'
-      };
-      commit('ADD_SONG', payload)
-    }
+    INIT_PLAYER: ({ commit }, {elementId, options}) => {
+      IframeLoader.load(() => {
+        commit('INIT_PLAYER', new window.YT.Player(elementId, options));
+      });
+    },
+    PLAY: ({ state }) => {
+      state.player.play();
+    },
+    PAUSE: ({ state }) => {
+      state.player.pause();
+    },
+    NEXT_SONG: ({ state, commit }) => {
+      if (state.playlist.length === 0) {
+        state.player.seekTo(state.player.getDuration())
+        return;
+      }
+
+      const firstLink = state.playlist[0];
+      const videoId = videoIdExtractor(firstLink)
+      state.player.loadVideoById(videoId);
+      commit ('POP_SONG');
+    },
   },
+
   getters: {
-    getPlaylist: state => state.playlist 
+    getPlaylist: (state) => state.playlist,
+    player: (state) => state.player,
   },
-  modules: {playerModule}
-})
+});

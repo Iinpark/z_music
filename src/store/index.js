@@ -26,11 +26,11 @@ export default new Vuex.Store({
   },
 
   actions: {
-    INIT_PLAYER: ({ commit}, {elementId, options}) => {
+    INIT_PLAYER: ({ commit, getters}, {elementId, options}) => {
       const handlers = {
         onplay: (link) => {
         commit('ADD_SONG',link);
-        if (this.getPlaylist.length === 1) {
+        if (getters.getPlaylist.length === 1) {
           this.PLAY()
         }
       }

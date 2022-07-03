@@ -5,14 +5,12 @@
     <Player
       @timeupdate="timeupdate"
     />
-    <Telegram/>
     <span>{{time.current}} / {{time.total}}</span>
   </div>
 </template>
 
 <script>
 import Player from '@/components/Player.vue'
-import Telegram from '../components/Telegram.vue'
 import TrackInformation from '../components/TrackInformation.vue'
 import { formatTime, makeTimer } from '@/utils'
 
@@ -38,7 +36,6 @@ export default {
   },
   components: {
     Player,
-    Telegram,
     TrackInformation
   }
 }

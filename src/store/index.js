@@ -1,69 +1,69 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { defineStore } from 'pinia'
+
 import IframeLoader from 'youtube-iframe';
 import videoIdExtractor from '../utils/youtubeVideoIdExtractor.js';
 import TelegramWorker from '../api/telegram.js'
 
-Vue.use(Vuex);
 
-export default new Vuex.Store({
-  state: {
+
+export const main = defineStore('main', {
+  state: () => ({
     playlist: [],
     player: {},
-    telegramWorker: {}
-  },
-  mutations: {
-    INIT_PLAYER: (state, {player, telegramWorker}) => {
-      state.player = player;
-      state.telegramWorker = telegramWorker;
-      window.player = state.player;
-    },
-    ADD_SONG: (state, link) => {
-      let playlist = state.playlist;
-      playlist.push(link);
-    },
-    POP_SONG: (state)=> state.playlist.pop()
-  },
+    telegramWorker: {},
+    isFirstSong: true
+  }),
 
   actions: {
-    INIT_PLAYER: ({ commit, getters}, {elementId, options}) => {
+    ADD_SONG (link) {
+      let playlist = this.playlist;
+      playlist.push(link);
+    },
+    POP_SONG () {
+      this.playlist.pop()
+    },
+
+    INIT_PLAYER ({elementId, options}) {
       const handlers = {
-        onplay: (link) => {
-        commit('ADD_SONG',link);
-        if (getters.getPlaylist.length === 1) {
+        onplay: function (link) {
+        this.ADD_SONG(link);
+        if (this.isFirstSong) {
+          this.NEXT_SONG()
+          this.player.unMute();
+          this.firstSong = false;
+          return;
+        }
+        if (this.playlist.length === 1) {
           this.PLAY()
         }
-      }
+      }.bind(this)
      }
+     this.telegramWorker = new TelegramWorker(process.env.VUE_APP_BOT_TOKEN, handlers)
 
-      IframeLoader.load(() => {
-        commit('INIT_PLAYER', {
-         player: new window.YT.Player(elementId, options),
-         telegramWorker: new TelegramWorker(process.env.VUE_APP_BOT_TOKEN, handlers)
-        });
-      });
+      IframeLoader.load(function () {
+         this.player = new window.YT.Player(elementId, options);
+         window.player = this.player;
+      }.bind(this));
     },
-    PLAY: ({ state }) => {
-      state.player.play();
+    PLAY () {
+      this.player.playVideo();
     },
-    PAUSE: ({ state }) => {
-      state.player.pause();
+    PAUSE () {
+      this.player.pauseVideo();
     },
-    NEXT_SONG: ({ state, commit }) => {
-      if (state.playlist.length === 0) {
-        state.player.seekTo(state.player.getDuration())
+    NEXT_SONG () {
+      const playlist= this.playlist;
+      const player = this.player;
+
+      if (playlist.length === 0) {
+        player.seekTo(player.getDuration())
         return;
       }
 
-      const firstLink = state.playlist[0];
+      const firstLink = playlist[0];
       const videoId = videoIdExtractor(firstLink)
-      state.player.loadVideoById(videoId);
-      commit ('POP_SONG');
+      player.loadVideoById(videoId);
+      this.POP_SONG();
     },
-  },
-
-  getters: {
-    getPlaylist: (state) => state.playlist,
-    player: (state) => state.player,
   },
 });

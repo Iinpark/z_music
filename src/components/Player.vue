@@ -6,32 +6,17 @@
 
 <script>
 
-import { mapGetters, mapActions} from 'vuex';
+import { mapActions, mapStores} from 'pinia';
+import { main } from '@/store/index.js';
 import STATES from '@/constants/playerStates.js';
 
 export default {
   name: "VideoPlayer",
-
   computed: {
-    ...mapGetters(['getPlaylist','player'])
-  },
-  watch: {
-    getPlaylist ()  {
-      if (this.firstSong) {
-        this.switchSongs()
-        this.player.unMute();
-        this.firstSong = false;
-        return;
-      }
-    }
-  },
-  data() {
-    return {
-      firstSong: true
-    };
+    ...mapStores(main)
   },
   methods: {
-    ...mapActions(['NEXT_SONG', 'INIT_PLAYER']),
+    ...mapActions(main, ['NEXT_SONG', 'INIT_PLAYER']),
     switchSongs () {
       this.NEXT_SONG()
     },
